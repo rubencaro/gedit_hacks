@@ -1,0 +1,11 @@
+[Plugin]
+Loader=python
+Module=clickconfig
+IAge=3
+Name=Click Config
+Description=Allows configuration of mouse-click text selections.
+Authors=Derek Veit <dv8box-goo@yahoo.com>
+Copyright=Copyright © 2010-2012 Derek Veit
+Website=http://code.google.com/p/gedit-click-config
+Version=1.4.0
+

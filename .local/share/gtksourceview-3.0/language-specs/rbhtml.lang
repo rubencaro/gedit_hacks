@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+2011-04-28 modificated for better implementation of the Railscasts theme (Vladimir Prieto)
+2011-04-28 added helper methods  (Vladimir Prieto)
+
+-->
+<language id="rbhtml" _name="erubis/tenjin" version="2.0" _section="Markup">
+  <metadata>
+    <property name="mimetypes">text/rhtml</property>
+    <property name="globs">*.rbhtml;*.rhtml;*.html.erb;*.erb;*.erubis;*.tenjin</property>
+  </metadata>
+
+  <styles>
+    <style id="comment"  _name="Comment" map-to="xml:comment"/>
+    <style id="js-block" _name="JavaScript Code"/>
+    <style id="rubytext" _name="rubytext" map-to="ruby:text"/>
+  </styles>
+
+  <definitions>
+
+    <context id="comment" style-ref="comment">
+        <start>&lt;%=?\s*#</start>
+        <end>%&gt;</end>
+        <include>
+            <context ref="def:in-comment"/>
+        </include>
+    </context>
+
+    <!-- JS code inside javascript_tag -->
+    <context id="js-block">
+        <start>&lt;%= javascript_tag do %&gt;</start>
+        <end>&lt;% end %&gt;</end>
+        <include>
+            <context ref="js:js:*"/>
+        </include>
+    </context>
+
+    <!--  erubis Ruby  -->
+    <context id="erb-block" style-ref="rubytext" class="no-spell-check">
+      <start>&lt;%</start>
+      <end>%&gt;</end>
+      <include>
+        <context ref="ruby:ruby:*"/>
+      </include>
+    </context>
+
+    <!--  tenjin Ruby  -->
+    <context id="rb-block" style-ref="rubytext" class="no-spell-check">
+      <start>&lt;\?rb\s+</start>
+      <end>\s+\?&gt;</end>
+      <include>
+        <context ref="ruby:ruby:*"/>
+      </include>
+    </context>
+
+    <context id="srb-block" style-ref="rubytext" class="no-spell-check">
+      <start>#{</start>
+      <end>}</end>
+      <include>
+        <context ref="ruby:ruby:*"/>
+      </include>
+    </context>
+
+    <context id="scrb-block" style-ref="rubytext" class="no-spell-check">
+      <start>\${</start>
+      <end>}</end>
+      <include>
+        <context ref="ruby:ruby:*"/>
+      </include>
+    </context>
+
+    <context id="any-ruby-block">
+      <include>
+        <context ref="erb-block"/>
+        <context ref="rb-block"/>
+        <context ref="srb-block"/>
+        <context ref="scrb-block"/>
+      </include>
+    </context>
+
+    <replace id="html:embedded-lang-hook" ref="any-ruby-block"/>
+    <replace id="js:embedded-lang-hook" ref="any-ruby-block"/>
+
+    <context id="rbhtml">
+      <include>
+        <context ref="comment"/>
+        <context ref="js-block"/>
+        <context ref="erb-block"/>
+        <context ref="rb-block"/>
+        <context ref="srb-block"/>
+        <context ref="scrb-block"/>
+        <context ref="html:html"/>
+      </include>
+    </context>
+
+  </definitions>
+</language>
