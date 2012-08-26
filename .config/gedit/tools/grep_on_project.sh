@@ -1,6 +1,6 @@
 #!/bin/bash
 # [Gedit Tool]
-# Name=grep on project
+# Name=Grep on project
 # Shortcut=<Control><Shift>f
 # Applicability=all
 # Output=output-panel
