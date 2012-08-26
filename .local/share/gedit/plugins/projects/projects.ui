@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkActionGroup" id="ProjectsPluginActiveActions">
+    <child>
+      <object class="GtkAction" id="action_move_to_new_window">
+        <property name="label" translatable="yes">Move to new window</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_open_directory_from_active">
+        <property name="label" translatable="yes">View Project Folder</property>
+        <property name="stock_id">gtk-directory</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_close_active_project">
+        <property name="label" translatable="yes">Close Project</property>
+        <property name="stock_id">gtk-close</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_projects">
+        <property name="label" translatable="yes">Projects</property>
+      </object>
+    </child>
+  </object>
+  <object class="GtkActionGroup" id="ProjectsPluginWidgetActions">
+    <child>
+      <object class="GtkAction" id="action_open_directory">
+        <property name="label" translatable="yes">View Folder</property>
+        <property name="stock_id">gtk-directory</property>
+        <signal name="activate" handler="on_action" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_open_file">
+        <property name="label" translatable="yes">Open File…</property>
+        <property name="stock_id">gtk-open</property>
+        <signal name="activate" handler="on_action" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_find">
+        <property name="label" translatable="yes">Find Subprojects</property>
+        <property name="stock_id">gtk-find</property>
+        <signal name="activate" handler="on_action" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_add_parent">
+        <property name="label" translatable="yes">Add Parent Folder</property>
+        <property name="stock_id">gtk-add</property>
+        <signal name="activate" handler="on_action" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_remove">
+        <property name="label" translatable="yes">Remove Project</property>
+        <property name="stock_id">gtk-remove</property>
+        <signal name="activate" handler="on_action" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_add_directory">
+        <property name="label" translatable="yes">Add Folder…</property>
+        <property name="stock_id">gtk-add</property>
+        <signal name="activate" handler="on_action" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_open_project">
+        <property name="label" translatable="yes">Open Project</property>
+        <property name="stock_id">gtk-open</property>
+        <signal name="activate" handler="on_action" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_close_project">
+        <property name="label" translatable="yes">Close Project</property>
+        <property name="stock_id">gtk-close</property>
+        <signal name="activate" handler="on_action" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAction" id="action_open_project_newwindow">
+        <property name="label" translatable="yes">Open in New Window</property>
+        <property name="stock_id">gtk-open</property>
+        <signal name="activate" handler="on_action" swapped="no"/>
+      </object>
+    </child>
+  </object>
+  <object class="GtkVBox" id="widget_projects">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkTreeView" id="treeview_open_projects">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="headers_clickable">False</property>
+        <property name="tooltip_column">4</property>
+        <signal name="popup-menu" handler="on_treeview_projects_popup_menu" swapped="no"/>
+        <child internal-child="selection">
+          <object class="GtkTreeSelection" id="treeview-selection1"/>
+        </child>
+        <child>
+          <object class="GtkTreeViewColumn" id="treeviewcolumn2">
+            <property name="title" translatable="yes">Open Projects</property>
+            <child>
+              <object class="GtkCellRendererText" id="cellrenderertext2">
+                <property name="ellipsize">start</property>
+              </object>
+              <attributes>
+                <attribute name="text">0</attribute>
+                <attribute name="weight">2</attribute>
+              </attributes>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow" id="scrolledwindow2">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="shadow_type">in</property>
+        <child>
+          <object class="GtkTreeView" id="treeview_projects">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="has_tooltip">True</property>
+            <property name="vexpand">True</property>
+            <property name="headers_clickable">False</property>
+            <property name="tooltip_column">4</property>
+            <signal name="popup-menu" handler="on_treeview_projects_popup_menu" swapped="no"/>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection" id="treeview-selection2"/>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn" id="treeviewcolumn1">
+                <property name="title" translatable="yes">All Projects</property>
+                <child>
+                  <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                  <attributes>
+                    <attribute name="text">0</attribute>
+                    <attribute name="weight">2</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+  </object>
+</interface>

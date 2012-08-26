@@ -10,28 +10,28 @@ class RestoreTabsWindowActivatable(GObject.Object, Gedit.WindowActivatable):
     def __init__(self):
         GObject.Object.__init__(self)
         self._handlers = []
-    
+
     def do_activate(self):
         """
         Connect signal handlers.
         """
         handlers = []
-        handler_id = self.window.connect("delete-event", 
-                                         self.on_window_delete_event)                             
+        handler_id = self.window.connect("delete-event",
+                                         self.on_window_delete_event)
         self._handlers.append(handler_id)
-        
+
         # temporary handler to catch the first time a window is shown
-        self._temp_handler = self.window.connect("show", self.on_window_show)  
+        self._temp_handler = self.window.connect("show", self.on_window_show)
 
     def do_deactivate(self):
         """
         Disconect any signal handlers that were added in do_activate().
         """
         [self.window.disconnect(handler_id) for handler_id in self._handlers]
-    
+
     def do_update_state(self):
         pass
-        
+
     def is_first_window(self):
         """
         Return True if the window being added is the first window instance.
@@ -51,7 +51,7 @@ class RestoreTabsWindowActivatable(GObject.Object, Gedit.WindowActivatable):
         settings = Gio.Settings.new(SETTINGS_SCHEMA)
         settings.set_value('uris', GLib.Variant("as", uris))
         return False
-    
+
     def on_window_show(self, window, data=None):
         """
         Only restore tabs if this window is the first Gedit window instance.
@@ -67,7 +67,6 @@ class RestoreTabsWindowActivatable(GObject.Object, Gedit.WindowActivatable):
                     location = Gio.file_new_for_uri(uri)
                     tab = self.window.get_tab_from_location(location)
                     if not tab:
-                        self.window.create_tab_from_location(location, None, 0, 
+                        self.window.create_tab_from_location(location, None, 0,
                                                              0, False, True)
             self.window.disconnect(self._temp_handler)
-

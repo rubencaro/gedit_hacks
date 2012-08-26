@@ -1,0 +1,33 @@
+<ui>
+    <menubar name="MenuBar">
+        <placeholder name="ExtraMenu_1">
+            <menu name="ProjectsPluginMenu" action="action_projects">
+                <menuitem name="project_move_to_new_window" action="action_move_to_new_window"/>
+                <menuitem name="project_open_directory" action="action_open_directory_from_active"/>
+                <separator/>
+                <menuitem name="project_close" action="action_close_active_project"/>
+                <separator/>
+                <placeholder name="project_extra_items"/>
+                <separator/>
+                <placeholder name="project_recent"/>
+            </menu>
+        </placeholder>
+    </menubar>
+    <popup name="projects_panel_popup">
+        <placeholder name="placeholder_default"/>
+        <separator/>
+        <menuitem name="menuitem_open_project" action="action_open_project"/>
+        <menuitem name="menuitem_open_project_newwindow" action="action_open_project_newwindow"/>
+        <menuitem name="menuitem_open_directory" action="action_open_directory"/>
+        <menuitem name="menuitem_open_file" action="action_open_file"/>
+        <separator/>
+        <menuitem name="menuitem_close_project" action="action_close_project"/>
+        <separator/>
+        <menuitem name="menuitem_add_directory" action="action_add_directory"/>
+        <menuitem name="menuitem_add_parent" action="action_add_parent"/>
+        <menuitem name="menuitem_remove" action="action_remove"/>
+        <separator/>
+        <menuitem name="menuitem_find" action="action_find"/>
+    </popup>
+</ui>
+

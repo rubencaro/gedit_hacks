@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.gedit.plugins.projects" path="/org/gnome/gedit/plugins/projects/">
+    <key type="s" name="scan-location">
+      <default>'~/Projects'</default>
+      <summary>Projects folder</summary>
+      <description>Directory to scan for new projects.</description>
+    </key>
+    <key type="s" name="project-indications">
+      <default>'.bzr .git .quickly setup.py autogen.sh configure'</default>
+      <summary>Indications of a project directory</summary>
+      <description>Files and Folders that indicate project directory.</description>
+    </key>
+    <key type="s" name="project-indications-nosubprojects">
+      <default>'.svn Makefile'</default>
+      <summary>Indications of a project directory without subprojects</summary>
+      <description>Files and Folders that indicate project directory and have no subprojects.</description>
+    </key>
+    <key type="b" name="scan-on-start">
+      <default>false</default>
+      <summary>Automatically scan for new projects</summary>
+      <description>Scan for new projects when the program starts.</description>
+    </key>
+    <key type="s" name="default-project-action">
+      <default>'action_open_project'</default>
+      <summary>Default Project Action</summary>
+    </key>
+    <key type="b" name="filebrowser-set-root-on-project-open">
+      <default>true</default>
+      <summary>Set File Browser location on Project open</summary>
+    </key>
+    <key type="as" name="recent-projects">
+      <default>[]</default>
+      <summary>List of recently opened projects</summary>
+    </key>
+    <key type="u" name="max-recents">
+      <range min="0" max="50"/>
+      <default>5</default>
+      <summary>Maximum Recent Projects</summary>
+      <description>Specifies the maximum number of recently opened projects that will be displayed in the "Recent Projects" submenu.</description>
+    </key>
+  </schema>
+</schemalist>
+
