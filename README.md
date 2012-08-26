@@ -4,12 +4,16 @@ Includes several third party plugins and styles, and a few of my own.
 ## Install
 
 I install it just by copying files:
- * <pre>cp -rv gedit_hacks/.config/* ~/.config/</pre>
- * <pre>cp -rv gedit_hacks/.local/* ~/.local/</pre>
+<pre>
+ cp -rv gedit_hacks/.config/* ~/.config/
+ cp -rv gedit_hacks/.local/* ~/.local/
+</pre>
 
 And then installing some config schemas needed for some plugins:
- * <pre>cd ~/.local/share/gedit/plugins</pre>
- * <pre>./install_schemas.sh</pre>
+<pre>
+ cd ~/.local/share/gedit/plugins
+ ./install_schemas.sh
+</pre>
 
 Then you should activate/configure each plugin from gedit prefs and menus.
 
