@@ -25,6 +25,11 @@ read SELECTION
 # allow to refine expression
 EXPRESSION=$(zenity --entry --text='Expression to grep' --entry-text="$SELECTION")
 
+if [[ ! '0' = "$?" || '' = "$EXPRESSION" ]]; then # cancelled
+  echo "Cancelled."
+  exit 0
+fi
+
 # add document dir
 GREP_PATHS=$GEDIT_CURRENT_DOCUMENT_DIR
 
