@@ -360,6 +360,10 @@
       <match>(?&lt;!:):[a-zA-Z0-9_]+</match>
     </context>
 
+    <context id="new_symbols" style-ref="symbol">
+      <match>(?&lt;!:)[a-zA-Z0-9_]+:[^:]</match>
+    </context>
+
     <context id="regexp-variables" style-ref="regex">
       <match>\$[1-9][0-9]*</match>
     </context>
@@ -575,6 +579,7 @@
         <context ref="class-variables"/>
         <context ref="instance-variables"/>
         <context ref="symbols"/>
+        <context ref="new_symbols"/>
         <context ref="regexp-variables"/>
         <context ref="constants"/>
         <context ref="nil-value"/>
