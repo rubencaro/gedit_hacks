@@ -451,6 +451,17 @@
       </include>
     </context>
 
+    <context id="percent-bracketed-string" style-ref="string" class="string" class-disabled="no-spell-check">
+      <start>%\(</start>
+      <end>\)</end>
+      <include>
+        <context ref="escape"/>
+        <context ref="def:line-continue"/>
+        <context ref="complex-interpolation"/>
+        <context ref="simple-interpolation"/>
+      </include>
+    </context>
+
     <context id="single-quoted-string" style-ref="string" class="string" class-disabled="no-spell-check">
       <start>'</start>
       <end>'</end>
@@ -565,6 +576,7 @@
         <context ref="here-doc-double-quoted-string"/>
         <context ref="here-doc-string"/>
         <context ref="here-doc-indented-string"/>
+        <context ref="percent-bracketed-string"/>
         <context ref="double-quoted-string"/>
         <context ref="single-quoted-string"/>
         <context ref="backtick-quoted-string"/>
