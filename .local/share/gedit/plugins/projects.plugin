@@ -1,9 +1,0 @@
-[Plugin]
-Loader=python
-Module=projects
-IAge=3
-Name=Projects Manager
-Description=Manage projects in gedit
-Authors=B. Clausius <barcc@gmx.de>
-Copyright=Copyright © 2012 B. Clausius
-Website=https://launchpad.net/gedit-projects

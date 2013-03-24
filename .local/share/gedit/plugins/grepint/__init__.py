@@ -23,8 +23,14 @@ import tempfile
 import time
 import string
 
-max_result = 50
+max_result = 100
 app_string = "Grepint"
+
+def spit(*obj):
+    print str(obj)
+
+def send_message(window, object_path, method, **kwargs):
+    return window.get_message_bus().send_sync(object_path, method, **kwargs)
 
 # essential interface
 class GrepintPluginInstance:
@@ -35,8 +41,7 @@ class GrepintPluginInstance:
         glob_excludes = ['*.log','*~','*.swp']
         dir_excludes = ['.git','.svn','log']
         self._excludes = '--exclude=' + ' --exclude='.join(glob_excludes)
-        self._excludes += '--exclude-dir=' + ' --exclude-dir='.join(dir_excludes)
-        self._tmpfile = os.path.join(tempfile.gettempdir(), 'grepint.%s.%s' % (os.getuid(),os.getpid()))
+        self._excludes += ' --exclude-dir=' + ' --exclude-dir='.join(dir_excludes)
         self._show_hidden = False
         self._liststore = None;
         self._init_ui()
@@ -49,13 +54,9 @@ class GrepintPluginInstance:
         self._window = None
         self._plugin = None
         self._liststore = None;
-        os.popen('rm %s &> /dev/null' % (self._tmpfile))
 
     def update_ui( self ):
         return
-
-    def spit(*obj):
-        print str(obj)
 
     # MENU STUFF
     def _insert_menu( self ):
@@ -148,7 +149,7 @@ class GrepintPluginInstance:
 
     #mouse event on list
     def on_list_mouse( self, widget, event ):
-        if event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.open_selected_item( event )
 
     #key selects from list (passthrough 3 args)
@@ -187,13 +188,13 @@ class GrepintPluginInstance:
 
         if self._single_file_grep:
             if len(pattern) > 0:
-                cmd = "grep -inH -m %d -e '%s' '%s' 2> /dev/null" % (max_result, pattern, self._current_file)
+                cmd = "grep -inH -m %d -e \"%s\" '%s' 2> /dev/null" % (max_result, pattern, self._current_file)
             else:
                 self._grepint_window.set_title("Enter pattern ... ")
                 return
         else:
             if len(pattern) > 3:
-                cmd = "grep -inHRI -D skip -m %d %s -e '%s' %s 2> /dev/null" % (max_result, self._excludes, pattern, self.get_dirs_string())
+                cmd = "grep -inHRI -D skip -m %d %s -e \"%s\" %s 2> /dev/null" % (max_result, self._excludes, pattern, self.get_dirs_string())
             else:
                 self._grepint_window.set_title("Enter pattern (3 chars min)... ")
                 return
@@ -322,12 +323,13 @@ class GrepintPluginInstance:
         self._init_ui()
 
         doc = self._window.get_active_document()
-        location = doc.get_location()
-        if location and doc.is_local():
-            self._current_file = location.get_uri().replace("file://","").replace("//","/")
-        else:
-            self.status("Cannot grep on remote or void files !")
-            return
+        if doc:
+          location = doc.get_location()
+          if location and doc.is_local():
+              self._current_file = location.get_uri().replace("file://","").replace("//","/")
+          elif self._single_file_grep:
+              # cannot do void or remote files
+              return
 
         if self._single_file_grep:
             self._grepint_window.set_size_request(600,400)
@@ -345,10 +347,10 @@ class GrepintPluginInstance:
             self._action_rvm.set_sensitive(True)
 
         self._grepint_window.show()
-        if doc.get_selection_bounds():
+        if doc and doc.get_selection_bounds():
             start, end = doc.get_selection_bounds()
             self._glade_entry_name.set_text( doc.get_text(start, end, True) )
-	    self.on_pattern_entry(None,None)
+        self.on_pattern_entry(None,None)
         self._glade_entry_name.select_region(0,-1)
         self._glade_entry_name.grab_focus()
 
@@ -444,22 +446,11 @@ class GrepintPluginInstance:
             self._open_document( path,int(line),1 )
         self._grepint_window.hide()
 
-    # FILEBROWSER integration
+    # filebrowser integration
     def get_filebrowser_root(self):
-        base = u'org.gnome.gedit.plugins.filebrowser'
-
-        settings = Gio.Settings.new(base)
-        root = settings.get_string('virtual-root')
-
-        if root is not None:
-            filter_mode = settings.get_strv('filter-mode')
-
-            if 'hide-hidden' in filter_mode:
-                self._show_hidden = False
-            else:
-                self._show_hidden = True
-
-            return root
+        res = send_message(self._window, '/plugins/filebrowser', 'get_root')
+        if res.location is not None:
+            return res.location.get_path()
 
 # STANDARD PLUMMING
 class GrepintPlugin(GObject.Object, Gedit.WindowActivatable):

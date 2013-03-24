@@ -1,8 +1,0 @@
-@binding-set unbind-ctrl-d {
-        unbind "<ctrl>d";
-        unbind "<shift>F10";
-        unbind "<ctrl>Page_Up";
-        unbind "<ctrl>Page_Down";
-}
-GtkTreeView { gtk-key-bindings: unbind-ctrl-d; }
-GtkTextView { gtk-key-bindings: unbind-ctrl-d; }

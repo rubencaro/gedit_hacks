@@ -6,6 +6,9 @@ import tempfile
 max_result = 50
 app_string = "Snap open"
 
+def send_message(window, object_path, method, **kwargs):
+    return window.get_message_bus().send_sync(object_path, method, **kwargs)
+
 ui_str="""<ui>
 <menubar name="MenuBar">
     <menu name="FileMenu" action="File">
@@ -96,7 +99,7 @@ class SnapOpenPluginInstance:
 
     #mouse event on list
     def on_list_mouse( self, widget, event ):
-        if event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.open_selected_item( event )
 
     #key selects from list (passthrough 3 args)
@@ -277,22 +280,11 @@ class SnapOpenPluginInstance:
             tab = self._window.create_tab_from_location( gio_file, None, 0, 0, False, False )
         self._window.set_active_tab( tab )
 
-# FILEBROWSER integration
+    # filebrowser integration
     def get_filebrowser_root(self):
-        base = u'org.gnome.gedit.plugins.filebrowser'
-
-        settings = Gio.Settings.new(base)
-        root = settings.get_string('virtual-root')
-
-        if root is not None:
-            filter_mode = settings.get_strv('filter-mode')
-
-            if 'hide-hidden' in filter_mode:
-                self._show_hidden = False
-            else:
-                self._show_hidden = True
-
-            return root
+        res = send_message(self._window, '/plugins/filebrowser', 'get_root')
+        if res.location is not None:
+            return res.location.get_path()
 
 # STANDARD PLUMMING
 class SnapOpenPlugin(GObject.Object, Gedit.WindowActivatable):
