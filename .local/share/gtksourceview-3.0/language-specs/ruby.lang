@@ -87,10 +87,12 @@
       <keyword>def</keyword>
       <keyword>undef</keyword>
       <keyword>puts</keyword>
+      <keyword>print</keyword>
     </context>
 
     <context id="module-handlers" style-ref="module-handler">
       <keyword>require</keyword>
+      <keyword>require_relative</keyword>
       <keyword>include</keyword>
       <keyword>load</keyword>
     </context>
@@ -332,6 +334,7 @@
       <keyword>super</keyword>
       <keyword>__FILE__</keyword>
       <keyword>__LINE__</keyword>
+      <keyword>__dir__</keyword>
     </context>
 
     <context id="predefined-variables" style-ref="predefined-variable">
