@@ -88,6 +88,7 @@
       <keyword>undef</keyword>
       <keyword>puts</keyword>
       <keyword>print</keyword>
+      <keyword>assert</keyword>
     </context>
 
     <context id="module-handlers" style-ref="module-handler">
@@ -123,6 +124,7 @@
       <keyword>public</keyword>
       <keyword>redo</keyword>
       <keyword>rescue</keyword>
+      <keyword>raise</keyword>
       <keyword>retry</keyword>
       <keyword>return</keyword>
       <keyword>then</keyword>
