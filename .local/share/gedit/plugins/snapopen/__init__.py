@@ -297,16 +297,17 @@ class SnapOpenPlugin(GObject.Object, Gedit.WindowActivatable):
         GObject.Object.__init__(self)
 
     def _get_instance( self ):
-        return self.window.get_data( self.DATA_TAG )
+        return self.window.DATA_TAG
 
     def _set_instance( self, instance ):
-        self.window.set_data( self.DATA_TAG, instance )
+        self.window.DATA_TAG = instance
 
     def do_activate( self ):
         self._set_instance( SnapOpenPluginInstance( self, self.window ) )
 
     def do_deactivate( self ):
-        self._get_instance().deactivate()
+        if self._get_instance():
+            self._get_instance().deactivate()
         self._set_instance( None )
 
     def do_update_ui( self ):

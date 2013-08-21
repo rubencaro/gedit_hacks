@@ -186,11 +186,10 @@ class FastprojectsPluginInstance:
     def on_fastprojects_file_action( self ):
         self._init_ui()
 
-        self.calculate_project_paths()
-
         self._fastprojects_window.show()
-        self._glade_entry_name.select_region(0,-1)
-        self._glade_entry_name.grab_focus()
+        self._glade_entry_name.set_text('Calculating project paths...')
+
+        self.calculate_project_paths()
 
     def calculate_project_paths( self ):
         # build paths list
@@ -206,6 +205,8 @@ class FastprojectsPluginInstance:
                     dirnames.remove(d)
         finally:
             f.close()
+            self._glade_entry_name.set_text('')
+            self._glade_entry_name.grab_focus()
 
 
     #on any keyboard event in main window
@@ -244,16 +245,17 @@ class FastprojectsPlugin(GObject.Object, Gedit.WindowActivatable):
         GObject.Object.__init__(self)
 
     def _get_instance( self ):
-        return self.window.get_data( self.DATA_TAG )
+        return self.window.DATA_TAG
 
     def _set_instance( self, instance ):
-        self.window.set_data( self.DATA_TAG, instance )
+        self.window.DATA_TAG = instance
 
     def do_activate( self ):
         self._set_instance( FastprojectsPluginInstance( self, self.window ) )
 
     def do_deactivate( self ):
-        self._get_instance().deactivate()
+        if self._get_instance():
+            self._get_instance().deactivate()
         self._set_instance( None )
 
     def do_update_ui( self ):
