@@ -89,6 +89,7 @@
       <keyword>puts</keyword>
       <keyword>print</keyword>
       <keyword>assert</keyword>
+      <keyword>revoke</keyword>
     </context>
 
     <context id="module-handlers" style-ref="module-handler">
@@ -116,10 +117,12 @@
       <keyword>for</keyword>
       <keyword>if</keyword>
       <keyword>in</keyword>
+      <keyword>lambda</keyword>
       <keyword>next</keyword>
       <keyword>not</keyword>
       <keyword>or</keyword>
       <keyword>private</keyword>
+      <keyword>proc</keyword>
       <keyword>protected</keyword>
       <keyword>public</keyword>
       <keyword>redo</keyword>
@@ -440,13 +443,20 @@
     </context>
 
     <!-- in double quotes and backticks -->
-    <!-- FIXME: really would like for the syntax highlight to go back
-         to none here, as any ruby code could go here -->
     <context id="complex-interpolation" style-ref="text">
       <start>#{</start>
       <end>}</end>
       <include>
-        <context ref="ruby:ruby:*"/>
+        <context ref="ruby"/>
+      </include>
+    </context>
+
+    <!-- any block with {} -->
+    <context id="code-block" style-ref="text">
+      <start>[^%][\d\w\s]{</start>
+      <end>}</end>
+      <include>
+        <context ref="ruby"/>
       </include>
     </context>
 
@@ -465,8 +475,8 @@
     </context>
 
     <context id="percent-bracketed-string" style-ref="string" class="string" class-disabled="no-spell-check">
-      <start>%\{</start>
-      <end>\}</end>
+      <start>%[w]?{</start>
+      <end>}</end>
       <include>
         <context ref="escape"/>
         <context ref="def:line-continue"/>
@@ -476,7 +486,7 @@
     </context>
 
     <context id="percent-parenthesised-string" style-ref="string" class="string" class-disabled="no-spell-check">
-      <start>%\(</start>
+      <start>%[w]?\(</start>
       <end>\)</end>
       <include>
         <context ref="escape"/>
@@ -631,6 +641,7 @@
         <context ref="numeric-literal"/>
         <context ref="regex-alt-form"/>
         <context ref="regex-simple"/>
+        <context ref="code-block"/>
       </include>
     </context>
 
