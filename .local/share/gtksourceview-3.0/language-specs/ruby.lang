@@ -453,7 +453,7 @@
 
     <!-- any block with {} -->
     <context id="code-block" style-ref="text">
-      <start>[^%][\d\w\s]{</start>
+      <start>[^%][\d\w\s]\)?{</start>
       <end>}</end>
       <include>
         <context ref="ruby"/>
