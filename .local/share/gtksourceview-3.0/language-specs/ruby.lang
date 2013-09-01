@@ -89,7 +89,7 @@
       <keyword>puts</keyword>
       <keyword>print</keyword>
       <keyword>assert</keyword>
-      <keyword>revoke</keyword>
+      <keyword>refute</keyword>
     </context>
 
     <context id="module-handlers" style-ref="module-handler">
@@ -368,8 +368,8 @@
       <match>(?&lt;!:)assert_[a-zA-Z0-9_]+</match>
     </context>
 
-    <context id="revokes" style-ref="keyword">
-      <match>(?&lt;!:)revoke_[a-zA-Z0-9_]+</match>
+    <context id="refutes" style-ref="keyword">
+      <match>(?&lt;!:)refute_[a-zA-Z0-9_]+</match>
     </context>
 
     <context id="symbols" style-ref="symbol">
@@ -626,7 +626,7 @@
         <context ref="class-variables"/>
         <context ref="instance-variables"/>
         <context ref="assertions"/>
-        <context ref="revokes"/>
+        <context ref="refutes"/>
         <context ref="symbols"/>
         <context ref="new_symbols"/>
         <context ref="regexp-variables"/>
