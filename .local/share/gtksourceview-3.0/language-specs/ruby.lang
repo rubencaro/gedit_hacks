@@ -97,6 +97,7 @@
       <keyword>require_relative</keyword>
       <keyword>include</keyword>
       <keyword>load</keyword>
+      <keyword>extend</keyword>
     </context>
 
     <context id="keywords" style-ref="keyword">
