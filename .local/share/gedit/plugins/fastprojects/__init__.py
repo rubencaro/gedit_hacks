@@ -18,15 +18,15 @@
 
 from gi.repository import GObject, Gedit, Gtk, Gio, Gdk, GLib
 import os, os.path
-from urllib import pathname2url
 import tempfile
 import time
 import string
+from multiprocessing import Process
 
 app_string = "Fastprojects"
 
 def spit( *obj ):
-    print str(obj)
+    print(str(obj))
 
 def send_message(window, object_path, method, **kwargs):
     return window.get_message_bus().send_sync(object_path, method, **kwargs)
@@ -100,7 +100,7 @@ class FastprojectsPluginInstance:
 
         #setup buttons
         self._builder.get_object( "ok_button" ).connect( "clicked", self.open_selected_item )
-        self._builder.get_object( "cancel_button" ).connect( "clicked", lambda a: self._fastprojects_window.hide())
+        self._builder.get_object( "refresh_button" ).connect( "clicked", lambda a: self.calculate_project_paths(notify=True) )
 
         #setup entry field
         self._glade_entry_name = self._builder.get_object( "entry_name" )
@@ -155,7 +155,7 @@ class FastprojectsPluginInstance:
 
         self._liststore.clear()
         maxcount = 0
-        print cmd
+        print(cmd)
         hits = os.popen(cmd).readlines()
         spit(hits)
         for hit in hits:
@@ -185,13 +185,13 @@ class FastprojectsPluginInstance:
     #on menuitem activation (incl. shortcut)
     def on_fastprojects_file_action( self ):
         self._init_ui()
-
         self._fastprojects_window.show()
-        self._glade_entry_name.set_text('Calculating project paths...')
 
-        self.calculate_project_paths()
-
-    def calculate_project_paths( self ):
+    def calculate_project_paths( self, notify = False ):
+        if notify:
+          self._glade_entry_name.set_text('Calculating paths...')
+          while Gtk.events_pending():
+            Gtk.main_iteration()
         # build paths list
         f = open(self._tmpfile,'w')
         try:
@@ -251,7 +251,10 @@ class FastprojectsPlugin(GObject.Object, Gedit.WindowActivatable):
         self.window.DATA_TAG = instance
 
     def do_activate( self ):
-        self._set_instance( FastprojectsPluginInstance( self, self.window ) )
+        instance = FastprojectsPluginInstance( self, self.window )
+        self._set_instance( instance )
+        p = Process(target=instance.calculate_project_paths)
+        p.start()
 
     def do_deactivate( self ):
         if self._get_instance():
