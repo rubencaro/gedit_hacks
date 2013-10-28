@@ -25,3 +25,5 @@ https://github.com/rubencaro/gedit_grepint
 https://github.com/rubencaro/gedit_fastprojects
 
 https://github.com/rubencaro/gedit-snapopen-plugin
+
+https://github.com/nacho/gedit-accel-editor
