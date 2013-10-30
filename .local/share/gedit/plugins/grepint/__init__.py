@@ -21,11 +21,12 @@ import os, os.path
 import tempfile
 import time
 import string
+from subprocess import Popen, PIPE, STDOUT
 
 max_result = 1000
 app_string = "Grepint"
 
-def spit(*obj):
+def spit(obj):
     print( str(obj) )
 
 def send_message(window, object_path, method, **kwargs):
@@ -104,7 +105,7 @@ class GrepintPluginInstance:
 
     # UI DIALOGUES
     def _init_ui( self ):
-        filename = os.path.dirname( __file__ ) + "/grepint.ui"
+        filename = os.path.dirname( __file__ ) + "/dialog.ui"
         self._builder = Gtk.Builder()
         self._builder.add_from_file(filename)
 
@@ -115,11 +116,10 @@ class GrepintPluginInstance:
 
         #setup buttons
         self._builder.get_object( "search_button" ).connect( "clicked", lambda a: self.perform_search() )
-        self._builder.get_object( "ok_button" ).connect( "clicked", self.open_selected_item )
-        self._builder.get_object( "cancel_button" ).connect( "clicked", lambda a: self._grepint_window.hide())
+        self._builder.get_object( "open_button" ).connect( "clicked", self.open_selected_item )
 
         #setup entry field
-        self._glade_entry_name = self._builder.get_object( "entry_name" )
+        self._glade_entry_name = self._builder.get_object( "regex_entry" )
         self._glade_entry_name.connect("key-release-event", self.on_pattern_entry)
 
         #setup list field
@@ -145,7 +145,7 @@ class GrepintPluginInstance:
         self._action_git = self._builder.get_object("action_git")
         self._use_rvm = self._builder.get_object("check_rvm").get_active
         self._action_rvm = self._builder.get_object("action_rvm")
-
+        self._custom_folder = self._builder.get_object("custom_folder")
 
     #mouse event on list
     def on_list_mouse( self, widget, event ):
@@ -190,13 +190,13 @@ class GrepintPluginInstance:
 
         if self._single_file_grep:
             if len(pattern) > 0:
-                cmd = "grep -inH -m %d -e \"%s\" '%s' 2> /dev/null" % (max_result, pattern, self._current_file)
+                cmd = "grep -inH -e \"%s\" '%s' | head -n%d 2> /dev/null" % (pattern, self._current_file, max_result)
             else:
                 self._grepint_window.set_title("Enter pattern ... ")
                 return
         else:
             if len(pattern) > 2:
-                cmd = "grep -inHRI -D skip -m %d %s -e \"%s\" %s 2> /dev/null" % (max_result, self._excludes, pattern, self.get_dirs_string())
+                cmd = "grep -inHRI -D skip %s -e \"%s\" %s | head -n%d 2> /dev/null" % (self._excludes, pattern, self.get_dirs_string(), max_result)
             else:
                 self._grepint_window.set_title("Enter pattern (3 chars min)... ")
                 return
@@ -208,7 +208,7 @@ class GrepintPluginInstance:
         maxcount = 0
         print(cmd)
         self._label_info.set_text(cmd)
-        hits = os.popen(cmd).readlines()
+        hits = self.run(cmd)
         for hit in hits:
             parts = hit.split(':')
             path,line = parts[0:2]
@@ -246,7 +246,7 @@ class GrepintPluginInstance:
         try:
             cmd = "cd '%s'; git rev-parse --show-toplevel 2> /dev/null" % path
             print(cmd)
-            gitdir = os.popen(cmd).readlines()
+            gitdir = self.run(cmd)
         except:
             gitdir = ''
         if len(gitdir) > 0:
@@ -274,7 +274,7 @@ class GrepintPluginInstance:
             cmd = "/bin/bash -l -c 'source $HOME/.rvm/scripts/rvm &> /dev/null; cd '%s' &> /dev/null; gem env gemdir'" % d
             print(cmd)
             try:
-                gemset = os.popen(cmd).readlines()
+                gemset = self.run(cmd)
             except:
                 gemset = ''
             if len(gemset) > 0:
@@ -306,6 +306,17 @@ class GrepintPluginInstance:
         for d in self._dirs:
             string += "'%s' " % d
         return string
+
+    def run(self, cmd):
+        """ Gets the output lines of the given cmd filtering lines with encoding problems """
+        p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+        cs = []
+        for s in p.stdout.readlines():
+          try:
+              cs.append( str(s, encoding='utf-8') )
+          except:
+              pass
+        return cs
 
     def status( self,msg ):
         statusbar = self._window.get_statusbar()
@@ -340,6 +351,7 @@ class GrepintPluginInstance:
             self._action_fb.set_sensitive(False)
             self._action_git.set_sensitive(False)
             self._action_rvm.set_sensitive(False)
+            self._custom_folder.set_sensitive(False)
         else:
             self._grepint_window.set_size_request(900,400)
             self._column1.set_title('Match')
@@ -347,6 +359,7 @@ class GrepintPluginInstance:
             self._action_fb.set_sensitive(True)
             self._action_git.set_sensitive(True)
             self._action_rvm.set_sensitive(True)
+            self._custom_folder.set_sensitive(True)
 
         self._grepint_window.show()
         if doc and doc.get_selection_bounds():
@@ -383,6 +396,12 @@ class GrepintPluginInstance:
         # add every rvm gemset associated with each dir we got
         if self._use_rvm():
             self.add_rvm_gemset_dirs()
+
+        # add custom folder if given
+        custom_folder = self._custom_folder.get_filename()
+        spit(custom_folder)
+        if custom_folder is not None:
+            self._dirs.add( custom_folder )
 
         # append gedit dir (usually too wide for a quick search) if we have nothing so far
         if len(self._dirs) == 0:
