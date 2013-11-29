@@ -76,6 +76,8 @@
       <keyword>attr_writer</keyword>
       <keyword>attr_reader</keyword>
       <keyword>attr_accessor</keyword>
+      <keyword>def_delegators</keyword>
+      <keyword>def_delegator</keyword>
     </context>
 
     <context id="definitions" style-ref="keyword">
