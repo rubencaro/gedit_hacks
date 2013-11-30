@@ -571,9 +571,21 @@
       <end>(?&lt;!\\)]</end>
     </context>
 
-    <context id="regex-alt-form" style-ref="regex">
+    <context id="regex-alt-form-piped" style-ref="regex">
       <start>\%r\|</start>
       <end>\|\%{regex-opts}</end>
+      <include>
+        <context ref="escape"/>
+        <context ref="def:line-continue"/>
+        <context ref="complex-interpolation"/>
+        <context ref="simple-interpolation"/>
+        <context ref="regex-bracketed"/>
+       </include>
+     </context>
+
+    <context id="regex-alt-form-underscored" style-ref="regex">
+      <start>\%r_</start>
+      <end>_\%{regex-opts}</end>
       <include>
         <context ref="escape"/>
         <context ref="def:line-continue"/>
@@ -642,7 +654,8 @@
         <context ref="octal"/>
         <context ref="binary"/>
         <context ref="numeric-literal"/>
-        <context ref="regex-alt-form"/>
+        <context ref="regex-alt-form-piped"/>
+        <context ref="regex-alt-form-underscored"/>
         <context ref="regex-simple"/>
         <context ref="code-block"/>
       </include>
